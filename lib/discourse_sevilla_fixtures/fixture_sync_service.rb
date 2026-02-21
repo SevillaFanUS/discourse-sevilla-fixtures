@@ -46,7 +46,7 @@ module DiscourseSevillaFixtures
         external_id = raw["id"]
         next unless external_id
 
-        fixture = SevillaFixture.find_or_initialize_by(external_id: external_id)
+        fixture = ::SevillaFixture.find_or_initialize_by(external_id: external_id)
         assign_fixture_attributes(fixture, raw)
         fixture.save!
       rescue ActiveRecord::RecordInvalid => e
@@ -76,7 +76,7 @@ module DiscourseSevillaFixtures
     def post_pending_fixtures
       days_ahead = SiteSetting.sevilla_fixtures_days_ahead
 
-      pending = SevillaFixture
+      pending = ::SevillaFixture
         .unposted
         .schedulable
         .upcoming_within(days_ahead)
