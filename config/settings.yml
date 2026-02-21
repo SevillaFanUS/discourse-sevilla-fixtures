@@ -1,0 +1,40 @@
+plugins:
+  sevilla_fixtures_enabled:
+    default: false
+    type: bool
+    client: false
+
+  sevilla_fixtures_football_data_api_key:
+    default: ""
+    type: string
+    secret: true
+
+  sevilla_fixtures_team_id:
+    default: 559
+    type: integer
+    # 559 is Sevilla FC's ID on football-data.org
+
+  sevilla_fixtures_category_id:
+    default: 0
+    type: integer
+    # The Discourse category ID where match threads will be posted
+
+  sevilla_fixtures_post_username:
+    default: "system"
+    type: string
+    # The Discourse username that will author the match thread posts
+
+  sevilla_fixtures_days_ahead:
+    default: 14
+    type: integer
+    # How many days ahead to look for fixtures to post (e.g. 14 = post threads up to 2 weeks before kickoff)
+
+  sevilla_fixtures_event_timezone:
+    default: "Europe/Madrid"
+    type: string
+    # Timezone used for the Discourse Event start/end times
+
+  sevilla_fixtures_tags:
+    default: "sevilla-fc,match-thread"
+    type: string
+    # Comma-separated list of tags to apply to each match thread topic
