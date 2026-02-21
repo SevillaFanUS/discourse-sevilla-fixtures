@@ -3,7 +3,6 @@
 # Represents a Sevilla FC fixture fetched from football-data.org.
 # Tracks whether a Discourse topic/event has been created for it.
 class SevillaFixture < ActiveRecord::Base
-  before_create :assign_uuid
 
   # ── Validations ──────────────────────────────────────────────────────────────
 
@@ -50,11 +49,5 @@ class SevillaFixture < ActiveRecord::Base
   # Short label: "vs. Atlético Madrid" or "@ Real Betis"
   def matchup_label
     home_game? ? "vs. #{away_team}" : "@ #{home_team}"
-  end
-
-  private
-
-  def assign_uuid
-    self.uuid ||= SecureRandom.uuid
   end
 end
