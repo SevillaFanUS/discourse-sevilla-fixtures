@@ -9,7 +9,7 @@
 enabled_site_setting :sevilla_fixtures_enabled
 
 after_initialize do
-  # sevilla_fixture.rb lives in app/models/ and is autoloaded by Rails
+  require_relative "app/models/sevilla_fixture"
   require_relative "lib/discourse_sevilla_fixtures/football_data_client"
   require_relative "lib/discourse_sevilla_fixtures/fixture_post_builder"
   require_relative "lib/discourse_sevilla_fixtures/fixture_sync_service"
