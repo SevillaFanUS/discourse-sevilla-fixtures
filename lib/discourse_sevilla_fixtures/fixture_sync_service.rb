@@ -56,12 +56,18 @@ module DiscourseSevillaFixtures
 
     # Maps raw football-data.org JSON onto a SevillaFixture record.
     def assign_fixture_attributes(fixture, raw)
-      fixture.competition = raw.dig("competition", "name").to_s
-      fixture.home_team   = raw.dig("homeTeam", "name").to_s
-      fixture.away_team   = raw.dig("awayTeam", "name").to_s
-      fixture.status      = raw["status"].to_s
-      fixture.season      = raw.dig("season", "startDate")&.to_date&.year.to_i
-      fixture.venue       = raw.dig("venue").to_s.presence
+      fixture.uuid = SecureRandom.uuid if fixture.new_record?
+
+      fixture.competition         = raw.dig("competition", "name").to_s
+      fixture.competition_emblem  = raw.dig("competition", "emblem").to_s.presence
+      fixture.home_team           = raw.dig("homeTeam", "name").to_s
+      fixture.home_team_crest     = raw.dig("homeTeam", "crest").to_s.presence
+      fixture.away_team           = raw.dig("awayTeam", "name").to_s
+      fixture.away_team_crest     = raw.dig("awayTeam", "crest").to_s.presence
+      fixture.matchday            = raw.dig("matchday")
+      fixture.status              = raw["status"].to_s
+      fixture.season              = raw.dig("season", "startDate")&.to_date&.year.to_i
+      fixture.venue               = raw.dig("venue").to_s.presence
 
       # kickoff_at: the API returns an ISO-8601 string in UTC
       utc_date = raw["utcDate"]
@@ -76,11 +82,19 @@ module DiscourseSevillaFixtures
     def post_pending_fixtures
       days_ahead = SiteSetting.sevilla_fixtures_days_ahead
 
+      # Reset discourse_topic_id for any fixtures whose topic has been deleted
+      ::SevillaFixture.where.not(discourse_topic_id: nil).each do |fixture|
+        unless Topic.exists?(id: fixture.discourse_topic_id, deleted_at: nil)
+          fixture.update_columns(discourse_topic_id: nil)
+          Rails.logger.info("[SevillaFixtures] Reset topic ID for fixture #{fixture.external_id} – topic was deleted")
+        end
+      end
+
       pending = ::SevillaFixture
-        .unposted
-        .schedulable
-        .upcoming_within(days_ahead)
-        .order(:kickoff_at)
+                  .unposted
+                  .schedulable
+                  .upcoming_within(days_ahead)
+                  .order(:kickoff_at)
 
       Rails.logger.info("[SevillaFixtures] #{pending.size} fixture(s) pending Discourse post")
 
@@ -109,8 +123,8 @@ module DiscourseSevillaFixtures
         raw:                content[:raw],
         category:           SiteSetting.sevilla_fixtures_category_id,
         tags:               tags,
-        skip_validations:   true,    # allows system user to bypass rate limits
-        skip_guardian:      true     # bypass permission checks for programmatic posts
+        skip_validations:   true,
+        skip_guardian:      true
       )
 
       post&.topic_id
@@ -132,9 +146,9 @@ module DiscourseSevillaFixtures
     # Parses the comma-separated tag setting into an array.
     def parse_tags
       SiteSetting.sevilla_fixtures_tags
-        .split(",")
-        .map(&:strip)
-        .reject(&:empty?)
+                 .split(",")
+                 .map(&:strip)
+                 .reject(&:empty?)
     end
   end
 end
