@@ -48,7 +48,7 @@ module DiscourseSevillaFixtures
     def normalize_competition(competition, home_team, away_team)
       involves_sevilla = [home_team, away_team].any? { |t| t.downcase.include?("sevilla") }
       if involves_sevilla && competition.strip == "Primera Division"
-        "La Liga Primera Division"
+        "La Liga - Primera Division"
       else
         competition
       end
