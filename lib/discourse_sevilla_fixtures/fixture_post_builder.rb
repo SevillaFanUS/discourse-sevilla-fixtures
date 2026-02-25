@@ -37,10 +37,21 @@ module DiscourseSevillaFixtures
     #   [Competition Emblem img] Competition – Matchday N | Sevilla FC [crest] vs/@ Opponent [crest]
     # Falls back gracefully if emblem/crest URLs are not available.
     def build_title(fixture)
+      competition   = normalize_competition(fixture.competition, fixture.home_team, fixture.away_team)
+      emoji         = competition_emoji(competition)
       matchday_part = fixture.matchday.present? ? " - Matchday #{fixture.matchday}" : ""
       connector     = fixture.home_game? ? "vs" : "at"
 
-      "#{fixture.competition}#{matchday_part} | Sevilla FC #{connector} #{fixture.opponent}"
+      "#{emoji} #{competition}#{matchday_part} | Sevilla FC #{connector} #{fixture.opponent}"
+    end
+
+    def normalize_competition(competition, home_team, away_team)
+      involves_sevilla = [home_team, away_team].any? { |t| t.downcase.include?("sevilla") }
+      if involves_sevilla && competition.strip == "Primera Division"
+        "La Liga Primera Division"
+      else
+        competition
+      end
     end
 
     def build_body(fixture)
