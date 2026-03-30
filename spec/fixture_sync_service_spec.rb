@@ -14,7 +14,7 @@ RSpec.describe DiscourseSevillaFixtures::FixtureSyncService do
     SiteSetting.sevilla_fixtures_days_ahead       = 14
     SiteSetting.sevilla_fixtures_post_username    = "system"
     SiteSetting.sevilla_fixtures_tags             = "sevilla-fc,match-thread"
-    SiteSetting.sevilla_fixtures_event_timezone   = "Europe/Madrid"
+    SiteSetting.sevilla_fixtures_event_timezone   = "America/New_York"
   end
 
   describe "#run" do

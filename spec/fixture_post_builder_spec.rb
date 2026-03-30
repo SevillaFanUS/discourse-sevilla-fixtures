@@ -17,7 +17,7 @@ RSpec.describe DiscourseSevillaFixtures::FixturePostBuilder do
   end
 
   before do
-    SiteSetting.sevilla_fixtures_event_timezone = "Europe/Madrid"
+    SiteSetting.sevilla_fixtures_event_timezone = "America/New_York"
   end
 
   describe "#build" do
