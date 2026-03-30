@@ -30,7 +30,7 @@ plugins:
     # How many days ahead to look for fixtures to post (e.g. 14 = post threads up to 2 weeks before kickoff)
 
   sevilla_fixtures_event_timezone:
-    default: "Europe/Madrid"
+    default: "America/New_York"
     type: string
     # Timezone used for the Discourse Event start/end times
 
