@@ -11,7 +11,11 @@ enabled_site_setting :sevilla_fixtures_enabled
 after_initialize do
   require_relative "app/models/sevilla_fixture"
   require_relative "lib/discourse_sevilla_fixtures/football_data_client"
+  require_relative "lib/discourse_sevilla_fixtures/results_client"
   require_relative "lib/discourse_sevilla_fixtures/fixture_post_builder"
+  require_relative "lib/discourse_sevilla_fixtures/result_post_builder" 
   require_relative "lib/discourse_sevilla_fixtures/fixture_sync_service"
+  require_relative "lib/discourse_sevilla_fixtures/result_sync_service"
   require_relative "app/jobs/scheduled/sync_sevilla_fixtures"
+  require_relative "app/jobs/scheduled/post_sevilla_results"
 end
